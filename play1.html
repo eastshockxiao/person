@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易交互式火柴人生成器</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            background-color: #1f1f1f;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            /* font-family: "Times New Roman",serif; */
+            padding: 20px;
+            /* margin: 0px; */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            /* background-color: aqua; */
+        }
+
+        h1 {
+            text-align: center;
+            color: #4caf50;
+            margin: 20px 0px;
+        }
+
+        .controls {
+            background-color: #2a2a2a;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            margin: 15px;
+        }
+
+        .canvas-container {
+            background-color: #000;
+            height: 400px;
+            border-radius: 10px;
+            position: relative;
+            overflow: auto;
+        }
+
+        .person {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* transform: translate(-50% -50%); */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .value-display {
+            float: right;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>简易交互式火柴人生成器</h1>
+
+        <div class="controls">
+            <form class="personForm">
+                <div class="control-group">
+                    <label>大小：<span class="value-display" id="sizeValue">30</span></label>
+                    <input type="range" id="size" value="30" min="1" max="100" step="1">
+                </div>
+                <div class="control-group">
+                    <label>躯干角度：<span class="value-display" id="torsoangleValue">10</span></label>
+                    <input type="range" id="torsoangle" value="10" min="-75" max="75" step="1">
+                </div>
+                <div class="control-group">
+                    <label>左腿角度：<span class="value-display" id="legleftangleValue">15</span></label>
+                    <input type="range" id="legleftangle" value="15" min="-45" max="45" step="1">
+                </div>
+                <div class="control-group">
+                    <label>右腿角度：<span class="value-display" id="legrightangleValue">15</span></label>
+                    <input type="range" id="legrightangle" value="15" min="-45" max="45" step="1">
+                </div>
+                <div class="control-group">
+                    <label>左臂角度：<span class="value-display" id="armleftangleValue">15</span></label>
+                    <input type="range" id="armleftangle" value="15" min="-45" max="45" step="1">
+                </div>
+                <div class="control-group">
+                    <label>右臂角度：<span class="value-display" id="armrightangleValue">10</span></label>
+                    <input type="range" id="armrightangle" value="10" min="-45" max="45" step="1">
+                </div>
+
+                <button type="button" id="resetBtn">重置火柴人</button>
+            </form>
+        </div>
+        <div class="canvas-container">
+            <div class="person" id="person"></div>
+        </div>
+    </div>
+
+    <script src="./person1.js"></script>
+    <script>
+        person("person", 30, 10, 15, 15, 15, 10);
+
+        const sizeInput = document.getElementById("size");
+        const torsoangleInput = document.getElementById("torsoangle");
+        const legleftangleInput = document.getElementById("legleftangle");
+        const legrightangleInput = document.getElementById("legrightangle");
+        const armleftangleInput = document.getElementById("armleftangle");
+        const armrightangleInput = document.getElementById("armrightangle");
+
+        const sizeValue = document.getElementById("sizeValue");
+        const torsoangleValue = document.getElementById("torsoangleValue");
+        const legleftangleValue = document.getElementById("legleftangleValue");
+        const legrightangleValue = document.getElementById("legrightangleValue");
+        const armleftangleValue = document.getElementById("armleftangleValue");
+        const armrightangleValue = document.getElementById("armrightangleValue");
+
+        const resetBtn = document.getElementById("resetBtn");
+
+        function updateValue(element, value) {
+            element.textContent = value;
+            renderPerson();
+        }
+
+        sizeInput.addEventListener("input", () => updateValue(sizeValue, sizeInput.value));
+        torsoangleInput.addEventListener("input", () => updateValue(torsoangleValue, torsoangleInput.value));
+        legleftangleInput.addEventListener("input", () => updateValue(legleftangleValue, legleftangleInput.value));
+        legrightangleInput.addEventListener("input", () => updateValue(legrightangleValue, legrightangleInput.value));
+        armleftangleInput.addEventListener("input", () => updateValue(armleftangleValue, armleftangleInput.value));
+        armrightangleInput.addEventListener("input", () => updateValue(armrightangleValue, armrightangleInput.value));
+
+        function renderPerson() {
+            const size = parseInt(sizeInput.value);
+            const torsoangle = parseInt(torsoangleInput.value);
+            const legleftangle = parseInt(legleftangleInput.value);
+            const legrightangle = parseInt(legrightangleInput.value);
+            const armleftangle = parseInt(armleftangleInput.value);
+            const armrightangle = parseInt(armrightangleInput.value);
+
+            person("person", size, torsoangle, legleftangle, legrightangle, armleftangle, armrightangle);
+        };
+
+        resetBtn.addEventListener("click", () => {
+            sizeInput.value = 30;
+            torsoangleInput.value = 10;
+            legleftangleInput.value = 15;
+            legrightangleInput.value = 15;
+            armleftangleInput.value = 15;
+            armrightangleInput.value = 10;
+            
+            updateValue(sizeValue, sizeInput.value);
+            updateValue(torsoangleValue, torsoangleInput.value);
+            updateValue(legleftangleValue, legleftangleInput.value);
+            updateValue(legrightangleValue, legrightangleInput.value);
+            updateValue(armleftangleValue, armleftangleInput.value);
+            updateValue(armrightangleValue, armrightangleInput.value);
+        });
+
+
+
+    </script>
+
+
+</body>
+
+</html>
